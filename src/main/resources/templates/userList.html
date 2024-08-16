@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список юзеров</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td, th {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h2>Список юзеров</h2>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Возраст</th>
+        <th>Роль</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${userList}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.surname}"></td>
+        <td th:text="${user.age}"></td>
+        <td th:text="${user.roleToString()}"></td>
+        <td>
+            <a th:href="@{/admin/userInfoAdmin/{id}(id=${user.id})}" style="margin-right: 10px;">Подробнее</a>
+            <a th:href="@{/admin/{id}/edit(id=${user.id})}" style="margin-right: 10px;">Редактировать</a>
+            <a th:href="@{/admin/{id}/deleteUser(id=${user.id})}" style="color: red; cursor: pointer;">Удалить</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<a href="/admin/newUser" class="button">Добавить нового юзера</a>
+
+</body>
+</html>
