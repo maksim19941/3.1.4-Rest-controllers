@@ -1,20 +1,25 @@
-package ru.kata.spring.boot_security.demo.controllers;
+package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.servise.RoleServiceImpl;
-import ru.kata.spring.boot_security.demo.servise.UserServiceImp;
+import ru.kata.spring.boot_security.demo.service.RoleService;
+import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
+import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final UserServiceImp userService;
-    private final RoleServiceImpl roleService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
     public AdminController(UserServiceImp userService, RoleServiceImpl roleService) {
@@ -65,7 +70,7 @@ public class AdminController {
 
     @GetMapping("/{id}/deleteUser")
     public String deleteUser(@ModelAttribute("id") long id) {
-       userService.delete(id);
+        userService.delete(id);
         return "redirect:/admin";
     }
 

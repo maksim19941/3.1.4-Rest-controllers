@@ -8,6 +8,7 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+
         form {
             display: flex;
             flex-direction: column;
@@ -17,17 +18,20 @@
             padding: 20px;
             background-color: #f9f9f9;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         label {
             margin-top: 10px;
         }
+
         input[type="text"], select {
             padding: 10px;
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
         input[type="submit"] {
             padding: 10px 20px;
             background-color: #4CAF50;
@@ -37,9 +41,11 @@
             cursor: pointer;
             margin-top: 20px;
         }
+
         input[type="submit"]:hover {
             background-color: #45a049;
         }
+
         select[multiple] {
             height: 120px;
             overflow-y: scroll;
@@ -62,11 +68,11 @@
     <label for="password">Введите пароль:</label>
     <input type="text" th:field="*{password}" id="password">
 
-    <label for="roles">Роль:</label>
-    <select id="roles" multiple="multiple" th:field="*{roles}">
+    <label for="role">Роль:</label>
+    <select id="role" multiple="multiple" th:field="*{roles}">
         <option th:each="role: ${roles}"
-                th:value="${role.id}"
-                th:text="${role.name}"></option>
+                th:value="${role.getId()}"
+                th:text="${role.getName()}"></option>
     </select>
 
     <input type="submit" value="Добавить">

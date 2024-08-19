@@ -21,13 +21,15 @@ public class User implements UserDetails {
     private String surname;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Roles> roles;
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String name, String password, int age, String surname, Set<Roles> roles) {
+    public User(String name, String password, int age, String surname, Set<Role> roles) {
         this.name = name;
         this.password = password;
         this.age = age;
@@ -36,7 +38,7 @@ public class User implements UserDetails {
     }
 
     public boolean isAdmin() {
-        for (Roles role : this.getRoles()) {
+        for (Role role : this.getRoles()) {
             if (role.getName().equals("ROLE_ADMIN")) {
                 return true;
             }
@@ -72,7 +74,7 @@ public class User implements UserDetails {
         return sb.toString();
     }
 
-    public void setRoles(Set<Roles> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -84,9 +86,10 @@ public class User implements UserDetails {
         return Id;
     }
 
-    public Set<Roles> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
+
     public void setName(String name) {
         this.name = name;
     }

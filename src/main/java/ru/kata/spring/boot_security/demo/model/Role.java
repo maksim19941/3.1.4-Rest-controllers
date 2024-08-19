@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Roles implements GrantedAuthority {
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +19,10 @@ public class Roles implements GrantedAuthority {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
-    public Roles() {
+    public Role() {
     }
 
-    public Roles(String name) {
+    public Role(String name) {
         this.roleName = name;
     }
 
@@ -59,16 +59,14 @@ public class Roles implements GrantedAuthority {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Roles roles = (Roles) o;
-        return Objects.equals(id, roles.id) && Objects.equals(roleName, roles.roleName) && Objects.equals(users, roles.users);
+        Role role = (Role) o;
+        return Objects.equals(id, role.id) && Objects.equals(roleName, role.roleName) && Objects.equals(users, role.users);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, roleName, users);
     }
-
-
 
 
 }
