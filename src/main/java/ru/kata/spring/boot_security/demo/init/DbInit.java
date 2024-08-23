@@ -33,10 +33,10 @@ public class DbInit {
         Set<Role> rolesAdmin = new HashSet<>();
         rolesAdmin.add(admin);
         rolesAdmin.add(user);
-        userService.save(new User("Admin", "admin", 20, "Admin", rolesAdmin));
+        userService.save(new User("admin", "admin", 20, "admin@mail.ru", "admin", rolesAdmin));
 
         Set<Role> rolesUser = new HashSet<>();
         rolesUser.add(user);
-        userService.save(new User("User", "user", 20, "123", rolesUser));
+        userService.save(new User("user", "user", 20, "user@mail.ru", "user", rolesUser));
     }
 }

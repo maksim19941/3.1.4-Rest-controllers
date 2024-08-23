@@ -16,9 +16,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
     private String name;
-    private String password;
-    private int age;
     private String surname;
+    private int age;
+    private String email;
+    private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
@@ -29,11 +30,12 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String password, int age, String surname, Set<Role> roles) {
+    public User(String name, String surname, int age, String email, String password, Set<Role> roles) {
         this.name = name;
-        this.password = password;
-        this.age = age;
         this.surname = surname;
+        this.age = age;
+        this.email = email;
+        this.password = password;
         this.roles = roles;
     }
 
@@ -46,6 +48,19 @@ public class User implements UserDetails {
         return false;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String roleToString() {
+        StringBuilder sb = new StringBuilder();
+        this.roles.forEach(x -> sb.append(x.getName()).append(" "));
+        return sb.toString();
+    }
 
     public int getAge() {
         return age;
@@ -67,12 +82,6 @@ public class User implements UserDetails {
         return name;
     }
 
-
-    public String roleToString() {
-        StringBuilder sb = new StringBuilder();
-        this.roles.forEach(x -> sb.append(x.getName()).append(" "));
-        return sb.toString();
-    }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
@@ -139,23 +148,23 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Id == user.Id && age == user.age && Objects.equals(name, user.name) && Objects.equals(password, user.password) && Objects.equals(surname, user.surname) && Objects.equals(roles, user.roles);
+        return Id == user.Id && age == user.age && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Id, name, password, age, surname, roles);
+        return Objects.hash(Id, name, surname, age, email, password, roles);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "Id=" + Id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", age=" + age +
+                "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", roles=" + roles +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles.iterator() +
                 '}';
     }
 }

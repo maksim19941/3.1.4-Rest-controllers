@@ -1,13 +1,10 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
@@ -29,17 +26,15 @@ public class AdminController {
 
 
     @GetMapping
-    public String showAll(Model model) {
-        model.addAttribute("userList", userService.getListUser());
-        return "userList";
+    public String showAllPanel(Model model) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("currentUser", principal);
+        model.addAttribute("allUsers", userService.getListUser());
+        model.addAttribute("addUser", new User());
+        model.addAttribute("allRoles", roleService.getAllRoles());
+        return "/showAdminPanel";
     }
 
-    @GetMapping(value = "/newUser")
-    public String newUserPage(ModelMap model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("roles", roleService.getAllRoles());
-        return "/newUser";
-    }
 
     @PostMapping("/newUser")
     public String newUser(@ModelAttribute("user") User user) {
@@ -47,17 +42,11 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/userInfoAdmin/{id}")
-    public String showUserInfo(@ModelAttribute("id") long id, Model model) {
-        model.addAttribute("user", userService.getUser(id));
-        return "/userInfoAdmin";
-    }
-
-    @GetMapping(value = "/{id}/edit")
-    public String editPage(@ModelAttribute("id") long id, ModelMap model) {
-        model.addAttribute("user", userService.getUser(id));
-        model.addAttribute("roles", roleService.getAllRoles());
-        return "/editUser";
+    @GetMapping("/infoAdmin")
+    public String showUserInfo(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("currentUser", user);
+        return "showUserInfo_Admin";
     }
 
 
@@ -68,8 +57,8 @@ public class AdminController {
     }
 
 
-    @GetMapping("/{id}/deleteUser")
-    public String deleteUser(@ModelAttribute("id") long id) {
+    @PostMapping("/{id}/deleteUser")
+    public String deleteUser(@RequestParam("id") long id) {
         userService.delete(id);
         return "redirect:/admin";
     }
