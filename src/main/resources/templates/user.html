@@ -1,0 +1,46 @@
+<div class="container mt-4">
+    <h2>Панель пользователя</h2>
+    <hr/>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Возраст</th>
+            <th>Email</th>
+            <th>Роли</th>
+        </tr>
+        </thead>
+        <tbody id="userInfoBody">
+        <!-- Данные пользователя будут вставлены здесь -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(() => {
+        fetch("/user/info")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(userDto => {
+                const userInfoBody = document.getElementById('userInfoBody');
+                const roles = userDto.roles.join(', ');
+                userInfoBody.innerHTML =
+                    `<tr>
+                        <td>${userDto.id}</td>
+                        <td>${userDto.name}</td>
+                        <td>${userDto.username}</td>
+                        <td>${userDto.age}</td>
+                        <td>${userDto.email}</td>
+                        <td>${roles}</td>
+                    </tr>`
+                ;
+            })
+            .catch(error => console.error('Error loading user info:', error));
+    });
+</script>

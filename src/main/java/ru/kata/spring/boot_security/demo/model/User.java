@@ -5,6 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -15,16 +18,25 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
+
+    @Size(min = 2, max = 20, message = "Имя должно быть от 2 до 20 символов")
     private String name;
+
+    @Size(min = 2, max = 20, message = "Фамилия должна быть от 2 до 20 символов")
     private String surname;
+
+    @Min(value = 0, message = "Возраст не может быть отрицательным")
     private int age;
+
+
+    @Email
     private String email;
+
+
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public User() {
@@ -158,13 +170,6 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", age=" + age +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", roles=" + roles.iterator() +
-                '}';
+        return "User{" + "name='" + name + '\'' + ", surname='" + surname + '\'' + ", age=" + age + ", email='" + email + '\'' + ", password='" + password + '\'' + ", roles=" + roles.iterator() + '}';
     }
 }

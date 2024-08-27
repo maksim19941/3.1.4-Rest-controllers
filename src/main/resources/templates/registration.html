@@ -1,0 +1,96 @@
+<div class="container mt-4">
+    <h6>Добавить нового юзера</h6>
+    <hr/>
+    <form action="/admin/users" method="POST" id="registrationForm">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="name"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="surname" class="form-label">Surname:</label>
+            <input type="text" class="form-control" id="surname"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="age" class="form-label">Age:</label>
+            <input type="number" class="form-control" id="age"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="text" class="form-control" id="email"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" class="form-control" id="password"/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Roles:</label>
+            <div id="roles-container">
+                <!-- Место для добавления чекбоксов ролей -->
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Добавить юзера</button>
+    </form>
+</div>
+
+<script>
+    $(document).ready(() => {
+        fetch('/admin/roles')
+            .then(response => response.json())
+            .then(roles => {
+                const $rolesContainer = $('#roles-container');
+                roles?.forEach((role, index) => {
+                    const $checkboxDiv = $(`<div class="form-check">`)
+                    const $checkbox = $(`<input type="checkbox" value="${role.id}" name="roles" id="role${index}" class="form-check-input">`)
+                    const $label = $(`<label for="role${index}" class="form-check-label">${role.name}</label>`)
+                    $checkboxDiv.append($checkbox).append($label)
+                    $rolesContainer.append($checkboxDiv)
+                });
+            })
+            .catch(error => console.error('Error loading roles:', error));
+        $('#registrationForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const userData = {
+                name: $('#registrationForm #name').val(),
+                surname: $('#registrationForm #surname').val(),
+                age: $('#registrationForm #age').val(),
+                email: $('#registrationForm #email').val(),
+                password: $('#registrationForm #password').val(),
+                roles: $('#registrationForm #roles-container input:checkbox:checked').map(function () {
+                    return {
+                        id: $(this).val(),
+                        name: $(this).next().text()
+                    }
+                }).get()
+
+            };
+
+            fetch('/admin/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    fetchUsers()
+                    $('#registrationForm')[0].reset();
+                })
+                .catch(error => {
+                    console.error('Error registering new user:', error);
+                })
+        })
+    })
+</script>

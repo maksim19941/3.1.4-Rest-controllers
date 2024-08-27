@@ -1,0 +1,101 @@
+<div>
+    <form method="POST" action="/admin/edit" id="editForm">
+        <input type="hidden" id="id"/>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="name"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="surname" class="form-label">Surname:</label>
+            <input type="text" class="form-control" id="surname"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="age" class="form-label">Age:</label>
+            <input type="number" class="form-control" id="age"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="text" class="form-control" id="email"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" class="form-control" id="password"/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Roles:</label>
+            <div id="roles-container">
+                <!-- Место для добавления чекбоксов ролей -->
+            </div>
+        </div>
+
+        <br>
+        <button type="submit" class="btn btn-primary">Изменить</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </form>
+</div>
+
+<script>
+    $(document).ready(() => {
+        fetch('/admin/roles')
+            .then(response => response.json())
+            .then(roles => {
+                const $rolesContainer = $('#editForm #roles-container');
+                $.each(roles, function (index, role) {
+                    const $checkboxDiv = $(`<div class="form-check">`)
+                    const $checkbox = $(`<input type="checkbox" value="${role.id}" name="roles" id="role${index}" class="form-check-input">`)
+                    const $label = $(`<label for="role${index}" class="form-check-label">`).text(role.name)
+                    $checkboxDiv.append($checkbox).append($label)
+                    $rolesContainer.append($checkboxDiv)
+                });
+            })
+            .catch(error => console.error('Error loading roles:', error));
+        $('#editForm').on('submit', (event) => {
+            event.preventDefault();
+
+            const userData = {
+                id: $('#editForm #id').val(),
+                name: $('#editForm #name').val(),
+                surname: $('#editForm #surname').val(),
+                age: $('#editForm #age').val(),
+                email: $('#editForm #email').val(),
+                password: $('#editForm #password').val(),
+                roles: $('#editForm #roles-container input:checkbox:checked').map(function () {
+                    return {
+                        id: $(this).val(),
+                        name: $(this).next().text()
+                    }
+                }).get()
+
+            };
+
+            fetch('/admin/users', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    fetchUsers()
+                    $('#editModal').modal('hide');
+                })
+                .catch(error => {
+                    console.error('Error saving modified user:', error);
+                })
+        })
+    })
+</script>

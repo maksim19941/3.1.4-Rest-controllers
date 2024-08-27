@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.init;
+package ru.kata.spring.boot_security.demo.util;
 
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.Role;
