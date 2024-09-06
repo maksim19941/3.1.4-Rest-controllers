@@ -12,6 +12,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin")
@@ -38,8 +39,12 @@ public class AdminController {
 
     @GetMapping("/users/{id}")
     public User getUserById(@PathVariable long id) {
-        User user = userService.getUser(id);
-        return user;
+        return userService.getUser(id);
+    }
+
+    @GetMapping("/userRole/{id}")
+    public Set<Role> getUserRole(@PathVariable long id) {
+        return userService.getUserRole(id);
     }
 
     @PostMapping("/users")
@@ -54,7 +59,7 @@ public class AdminController {
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable long id) {
         userService.delete(id);
         return ResponseEntity.ok().build();

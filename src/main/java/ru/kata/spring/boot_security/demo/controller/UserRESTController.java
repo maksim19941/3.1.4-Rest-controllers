@@ -23,7 +23,6 @@ public class UserRESTController {
         this.userService = userService;
     }
 
-
     @GetMapping("/info")
     public UserDTO getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

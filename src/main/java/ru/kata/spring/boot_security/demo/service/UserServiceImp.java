@@ -7,11 +7,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,6 +30,11 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     public List<User> getListUser() {
         return userRepository.findAll();
+    }
+
+    public Set<Role> getUserRole(long id) {
+        return userRepository.getById(id).getRoles();
+
     }
 
 
